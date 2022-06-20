@@ -5,6 +5,7 @@ import * as argon from 'argon2';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -74,5 +75,13 @@ export class AuthService {
     return {
       access_token: token,
     };
+  }
+
+  validateUser(sub: number): Promise<User> {
+    return this.prisma.user.findUnique({
+      where: {
+        id: sub,
+      },
+    });
   }
 }
